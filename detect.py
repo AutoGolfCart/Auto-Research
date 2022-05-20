@@ -6,7 +6,7 @@ track_width = 2.0  # wheel center to center distance of car
 forward_constant = 1.0 # multiplier for speed of car, adjust for proper braking distance
 car_length = 6.0 # length of car from front to back wheels, center to center
 
-graph = False
+graph = True
 
 if graph:
     import matplotlib.pyplot as plt
@@ -18,8 +18,8 @@ def in_path(points, speed, angle):
     r_center = car_length * np.sin(90 - angle)
 
     # transform points to match new origin at turn center
-    points[0, :] += r_center
-    points[1, :] += car_length
+    points[:, 0] += r_center
+    points[:, 1] += car_length
 
     r_cf = np.hypot(r_center, car_length)  # front center radius
 
@@ -33,7 +33,7 @@ def in_path(points, speed, angle):
             np.pow(r_cf + track_width/2, 2) - np.pow(max_y, 2))
 
     # filter points to x range
-    points = points[points[0, :] <= x_max and points[0, :] >= x_min]
+    points = points[points[:, 0] <= x_max and points[:, 0] >= x_min]
 
     if graph:
         fig, ax = plt.subplots()
@@ -49,15 +49,16 @@ def in_path(points, speed, angle):
 
     # check for points inside predicted car path
     return np.any(points[
-        points[1, :] >= np.sqrt(
-            np.pow(points[0, :], 2) + np.pow(r_cf - track_width/2, 2))
+        points[:, 1] >= np.sqrt(
+            np.pow(points[:, 0], 2) + np.pow(r_cf - track_width/2, 2))
         and
-        points[1, :] <= np.sqrt(
-            np.pow(points[0, :], 2) + np.pow(r_cf + track_width/2, 2))
+        points[:, 1] <= np.sqrt(
+            np.pow(points[:, 0], 2) + np.pow(r_cf + track_width/2, 2))
         and
-        points[1, :] >= car_length
+        points[:, 1] >= car_length
         and
-        points[1, :] <= y_max
+        points[:, 1] <= y_max
     ])
 
 
+in_path()
