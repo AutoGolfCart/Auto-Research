@@ -1,4 +1,3 @@
-from hokuyolx import HokuyoLX
 import numpy as np
 
 track_width = 2.0  # wheel center to center distance of car
@@ -13,12 +12,12 @@ if graph:
     from matplotlib.patches import Arc
 
 
-def in_path(points, speed, angle):
+def in_path(points: np.ndarray, speed: float, angle: float) -> bool:
     """
     Given an array of x, y points, the speed of the cart, and the front steering angle, returns whether or not the points are in the cart's predicted path.
-    :param points: np.ndarray of shape (n, 2) and dtype float64 - Array of x, y data points returned from the LIDAR scanner.
-    :param speed: float - Speed of the golf cart
-    :param angle: float - Steering angle of the golf cart, in degrees. 0 is straight, positive is left and negative is right
+    :param np.ndarray points: shape (n, 2) and dtype float64 - Array of x, y data points returned from the LIDAR scanner.
+    :param float speed: Speed of the golf cart
+    :param float angle: float - Steering angle of the golf cart, in degrees. 0 is straight, positive is left and negative is right
     :return: Boolean - whether there are any data points in the cart's predicted path
     """
     # workaround for angle of 0
@@ -98,11 +97,6 @@ def in_path(points, speed, angle):
                 ax.plot(
                     (np.sqrt(np.power(r_left, 2) - np.power(y_max, 2)), np.sqrt(np.power(r_right, 2) - np.power(y_max, 2))),
                     (y_max, y_max))
-        # ax.plot((0, r_center + track_width / 2), (0, 0))
-        # ax.plot((0, r_center - track_width / 2), (0, car_length))
-        # ax.plot((0, r_center + track_width / 2), (0, car_length))
-        # ax.plot((0, r_center), (0, car_length))
-        # ax.add_patch(Arc((0, 0), width=r_cf * 2, height=r_cf * 2, theta1=0.0, theta2=90.0))
         ax.scatter(points[:, 0], points[:, 1])
         plt.show()
         # plt.savefig('plt.png')
@@ -132,5 +126,6 @@ def in_path(points, speed, angle):
                           (points[:, 1] < y_max)
                           ])
 
+# test
 
-print(in_path(np.asarray([[2, .5], [1, 1]], dtype=np.float64), 5, 0))
+print(in_path(np.asarray([[2, .5], [1, 1]], dtype=np.float64), 5,30))
